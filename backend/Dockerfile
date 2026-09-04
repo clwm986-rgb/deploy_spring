@@ -2,7 +2,7 @@
 # -------------------------
 # 2단계: Spring 빌드
 # -------------------------
-FROM gradle:8-jdk21 AS build-gradle
+FROM gradle:8-jdk21 AS backend-build
 
 WORKDIR /backend
 COPY . .
@@ -19,7 +19,7 @@ RUN ./gradlew build -x test --no-daemon
 FROM openjdk:21-ea-jdk-slim
 
 WORKDIR /backend
-COPY --from=build-gradle /backend/build/libs/*.jar app.jar
+COPY --from=backend-build /backend/build/libs/*.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-Xmx512m","-jar", "app.jar"]
